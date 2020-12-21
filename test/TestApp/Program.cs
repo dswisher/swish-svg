@@ -21,9 +21,11 @@ namespace TestApp
                 }
 
                 var path = args[0];
-                var doc = Svg.Load(path);
+                var svg = Svg.Load(path);
 
-                Console.WriteLine("Done.");
+                Svg.Save(svg, Console.Out);
+
+                Console.WriteLine();
 
                 return 0;
             }

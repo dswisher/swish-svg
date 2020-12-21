@@ -76,19 +76,7 @@ namespace SwishSvg
             using (var reader = XmlReader.Create(stream, readerSettings))
             {
                 // Load it up
-                var element = Load(reader);
-
-                // Make sure it is the proper type.
-                if (element is SvgSvgElement svg)
-                {
-                    return svg;
-                }
-                else
-                {
-                    // TODO - is there a better way to handle arbitrary fragments? Maybe this method should be LoadDocument or some such?
-                    // TODO - need a custom exception here
-                    throw new System.Exception("Loading arbitrary SVG elements from a file is not (yet) supported.");
-                }
+                return Load(reader);
             }
         }
 
@@ -101,9 +89,40 @@ namespace SwishSvg
         public static SvgElement Load(XmlReader reader)
         {
             var loader = new Loader();
-            var elem = loader.Load(reader);
+            loader.Load(reader);
 
-            return elem;
+            return loader.Root;
+        }
+
+
+        /// <summary>
+        /// Write an SVG element to the specified text writer.
+        /// </summary>
+        /// <param name="element">The SVG element to write.</param>
+        /// <param name="textWriter">The text writer where the element will be written.</param>
+        public static void Save(SvgElement element, TextWriter textWriter)
+        {
+            var settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
+
+            using (var xmlWriter = XmlWriter.Create(textWriter, settings))
+            {
+                Save(element, xmlWriter);
+            }
+        }
+
+
+        /// <summary>
+        /// Write an SVG element to the specified XML writer.
+        /// </summary>
+        /// <param name="element">The SVG element to write.</param>
+        /// <param name="xmlWriter">The XML writer where the element will be written.</param>
+        public static void Save(SvgElement element, XmlWriter xmlWriter)
+        {
+            // TODO
+            element.Write(xmlWriter);
         }
     }
 }

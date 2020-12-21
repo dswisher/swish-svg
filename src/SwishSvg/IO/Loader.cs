@@ -17,11 +17,16 @@ namespace SwishSvg.IO
 
 
         /// <summary>
+        /// Gets the root of the SVG element tree.
+        /// </summary>
+        public SvgElement Root { get; private set; }
+
+
+        /// <summary>
         /// Load an element from the specified reader.
         /// </summary>
         /// <param name="reader"> The reader from which the element will be loaded.</param>
-        /// <returns>The element that was loaded.</returns>
-        public SvgElement Load(XmlReader reader)
+        public void Load(XmlReader reader)
         {
             while (reader.Read())
             {
@@ -46,6 +51,23 @@ namespace SwishSvg.IO
                             EndElement(reader);
                             break;
 
+                        case XmlNodeType.Text:
+                            // TODO - this is probably way too simplistic
+                            elementStack.Peek().Content = reader.Value;
+                            break;
+
+                        case XmlNodeType.XmlDeclaration:
+                            // TODO - what to do with the XmlDeclaration?
+                            break;
+
+                        case XmlNodeType.Whitespace:
+                            // Ignored for now, until we find a reason not to ignore it
+                            break;
+
+                        case XmlNodeType.Comment:
+                            // Ignored
+                            break;
+
                         default:
                             Trace.TraceWarning("Unhandled XmlNodeType: {0}", reader.NodeType);
                             break;
@@ -57,74 +79,74 @@ namespace SwishSvg.IO
                     Trace.TraceError(ex.Message);
                 }
             }
-
-            // TODO - hack!
-            return new SvgSvgElement();
         }
 
 
         private void StartElement(XmlReader reader)
         {
-            Trace.Indent();
+            // Create an instance of the element
+            var elementName = reader.LocalName;
+            var elementNS = reader.NamespaceURI;
 
-            try
+            SvgElement createdElem = null;
+
+            if (elementNS == Constants.SvgNamespace || string.IsNullOrEmpty(elementNS))
             {
-                // Create an instance of the element
-                var elementName = reader.LocalName;
-                var elementNS = reader.NamespaceURI;
-
-                Trace.TraceInformation("StartElement: {0}", elementName);
-
-                SvgElement createdElem = null;
-
-                if (elementNS == Constants.SvgNamespace || string.IsNullOrEmpty(elementNS))
+                // TODO - use reflection to create the proper type
+                switch (elementName)
                 {
-                    // TODO - use reflection to create the proper type
-                    createdElem = new SvgSvgElement();
+                    case "desc":
+                        createdElem = new SvgDescElement();
+                        break;
 
-                    Trace.TraceInformation("created {0} element for name {1}", createdElem.GetType().Name, elementName);
+                    case "rect":
+                        createdElem = new SvgRectElement();
+                        break;
 
-                    // TODO - set attributes
-                }
-                else
-                {
-                    // TODO - handle non-SVG elements
-                    throw new System.NotImplementedException($"Non-SVG elements are not yet implemented: {elementNS}:{elementName}");
+                    case "svg":
+                        createdElem = new SvgSvgElement();
+                        break;
+
+                    default:
+                        createdElem = new SvgUnknownElement();
+                        break;
                 }
 
-                // If we have a parent element, add this as a child
-                // TODO - link child and parent (if any)
-
-                // Push this element on the stack
-                elementStack.Push(createdElem);
+                // TODO - set attributes
             }
-            finally
+            else
             {
-                Trace.Unindent();
+                // TODO - handle non-SVG elements
+                throw new System.NotImplementedException($"Non-SVG elements are not yet implemented: {elementNS}:{elementName}");
             }
+
+            // If we have a parent element, add this as a child
+            if (elementStack.Count == 0)
+            {
+                Root = createdElem;
+            }
+            else
+            {
+                var parent = elementStack.Peek();
+
+                parent.Children.Add(createdElem);
+                createdElem.Parent = parent;
+            }
+
+            // Push this element on the stack
+            elementStack.Push(createdElem);
         }
 
 
         private void EndElement(XmlReader reader)
         {
-            Trace.Indent();
+            var elementName = reader.LocalName;
+            var elementNS = reader.NamespaceURI;
 
-            try
-            {
-                var elementName = reader.LocalName;
-                var elementNS = reader.NamespaceURI;
+            // Pop the element off the stack
+            var element = elementStack.Pop();
 
-                // Pop the element off the stack
-                var element = elementStack.Pop();
-
-                // TODO - handle content nodes and/or styles
-
-                Trace.TraceInformation("EndElement: {0}", elementName);
-            }
-            finally
-            {
-                Trace.Unindent();
-            }
+            // TODO - handle content nodes and/or styles
         }
     }
 }
