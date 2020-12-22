@@ -8,5 +8,18 @@ namespace SwishSvg
     /// </summary>
     public class SvgRectElement : SvgElement
     {
+        /// <summary>
+        /// Gets or sets the X position of the element.
+        /// </summary>
+        // TODO - move this up to a base class, shared by all things with X
+        // TODO - make this an SvgUnit or some such, and not a string
+        public string X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Y position of the element.
+        /// </summary>
+        // TODO - move this up to a base class, shared by all things with Y
+        // TODO - make this an SvgUnit or some such, and not a string
+        public string Y { get; set; }
     }
 }

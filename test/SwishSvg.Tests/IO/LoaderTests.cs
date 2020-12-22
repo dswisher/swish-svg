@@ -12,7 +12,7 @@ namespace SwishSvg.Tests.IO
         [InlineData("desc", typeof(SvgDescElement))]
         [InlineData("svg", typeof(SvgSvgElement))]
         [InlineData("rect", typeof(SvgRectElement))]
-        [InlineData("unknown-name", typeof(SvgUnknownElement))]
+        [InlineData("not-an-svg-element", typeof(SvgUnknownElement))]
         public void CanLoadElement(string elementName, Type elementType)
         {
             // Arrange
@@ -39,6 +39,27 @@ namespace SwishSvg.Tests.IO
             // Assert
             elem.Should().BeOfType<SvgDescElement>();
             elem.Content.Should().Be(content);
+        }
+
+
+        [Fact]
+        public void CanLoadRectAttributes()
+        {
+            // Arrange
+            const string xVal = "3cm";
+            const string yVal = "8in";
+
+            var xml = ElementBuilder.Create("rect")
+                .AddAttribute("x", xVal)
+                .AddAttribute("y", yVal);
+
+            // Act
+            // TODO - add a FromString overload that is type-safe, so we don't have to cast
+            var rect = (SvgRectElement)Svg.FromString(xml.ToString());
+
+            // Assert
+            rect.X.Should().Be(xVal);
+            rect.Y.Should().Be(yVal);
         }
     }
 }

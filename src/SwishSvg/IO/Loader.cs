@@ -92,27 +92,12 @@ namespace SwishSvg.IO
 
             if (elementNS == Constants.SvgNamespace || string.IsNullOrEmpty(elementNS))
             {
-                // TODO - use reflection to create the proper type
-                switch (elementName)
-                {
-                    case "desc":
-                        createdElem = new SvgDescElement();
-                        break;
+                var elementType = ReflectionCache.GetTypeForElementName(elementName);
 
-                    case "rect":
-                        createdElem = new SvgRectElement();
-                        break;
+                createdElem = (SvgElement)Activator.CreateInstance(elementType);
 
-                    case "svg":
-                        createdElem = new SvgSvgElement();
-                        break;
-
-                    default:
-                        createdElem = new SvgUnknownElement();
-                        break;
-                }
-
-                // TODO - set attributes
+                // Set any attributes
+                SetAttributes(reader, createdElem);
             }
             else
             {
@@ -147,6 +132,25 @@ namespace SwishSvg.IO
             var element = elementStack.Pop();
 
             // TODO - handle content nodes and/or styles
+        }
+
+
+        private void SetAttributes(XmlReader reader, SvgElement element)
+        {
+            while (reader.MoveToNextAttribute())
+            {
+                var propInfo = ReflectionCache.GetPropertyInfo(element.GetType(), reader.LocalName);
+
+                if (propInfo != null)
+                {
+                    // TODO - do conversions!
+                    propInfo.SetValue(element, reader.Value);
+                }
+                else
+                {
+                    // TODO - add to the "property bag"
+                }
+            }
         }
     }
 }
