@@ -148,7 +148,8 @@ namespace SwishSvg.IO
                 }
                 else
                 {
-                    // TODO - add to the "property bag"
+                    // TODO - add to the "property bag"?
+                    Trace.TraceWarning("Unhandled {0} attribute: {1}", element.ElementName, reader.LocalName);
                 }
             }
         }

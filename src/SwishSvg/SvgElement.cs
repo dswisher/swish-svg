@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Xml;
 
+using SwishSvg.IO;
+
 namespace SwishSvg
 {
     /// <summary>
@@ -16,29 +18,23 @@ namespace SwishSvg
         /// </summary>
         protected SvgElement()
         {
-            // TODO - set the element name properly using reflection - this is all a temporary HACK!
-            switch (this.GetType().Name)
+            ElementName = ReflectionCache.GetNameForElementType(this.GetType());
+
+            if (ElementName == null)
             {
-                case "SvgSvgElement":
-                    ElementName = "svg";
-                    break;
-
-                case "SvgDescElement":
-                    ElementName = "desc";
-                    break;
-
-                case "SvgRectElement":
-                    ElementName = "rect";
-                    break;
-
-                default:
-                    // TODO - HACK! Throw? Should never get here!
-                    ElementName = "UNKNOWN";
-                    break;
+                // TODO - HACK! Throw? Should never get here!
+                ElementName = "UNKNOWN";
             }
 
             Children = new List<SvgElement>();
         }
+
+
+        /// <summary>
+        /// Gets or sets the ID of the element.
+        /// </summary>
+        [SvgAttribute("id")]
+        public string Id { get; set; }
 
 
         /// <summary>

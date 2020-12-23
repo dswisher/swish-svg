@@ -6,23 +6,23 @@ using SwishSvg.IO;
 namespace SwishSvg
 {
     /// <summary>
-    /// An SVG rectangle element.
+    /// An SVG circle element.
     /// </summary>
-    [SvgElement("rect")]
-    public class SvgRectElement : SvgElement
+    [SvgElement("circle")]
+    public class SvgCircleElement : SvgElement
     {
         /// <summary>
-        /// Gets or sets the X position of the element.
+        /// Gets or sets the X position of the element center.
         /// </summary>
         // TODO - make this an SvgUnit or some such, and not a string
-        [SvgAttribute("x")]
-        public string X { get; set; }
+        [SvgAttribute("cx")]
+        public string CX { get; set; }
 
         /// <summary>
-        /// Gets or sets the Y position of the element.
+        /// Gets or sets the Y position of the element center.
         /// </summary>
         // TODO - make this an SvgUnit or some such, and not a string
-        [SvgAttribute("y")]
-        public string Y { get; set; }
+        [SvgAttribute("cy")]
+        public string CY { get; set; }
     }
 }
