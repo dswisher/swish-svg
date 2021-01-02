@@ -96,6 +96,13 @@ namespace SwishSvg.IO
 
                 createdElem = (SvgElement)Activator.CreateInstance(elementType);
 
+                // A little hackery, for now
+                // TODO - figure out to properly create SvgUnknownElement, with the correct element name
+                if (createdElem is SvgUnknownElement unknown)
+                {
+                    unknown.SetElementName(elementName);
+                }
+
                 // Set any attributes
                 SetAttributes(reader, createdElem);
             }
@@ -139,6 +146,14 @@ namespace SwishSvg.IO
         {
             while (reader.MoveToNextAttribute())
             {
+                // Ignore some things, at least for now
+                if ((element.ElementName == "svg") && (reader.LocalName == "xmlns"))
+                {
+                    // TODO - figure out how to handle the SVG namespace
+                    continue;
+                }
+
+                // Find the corresponding property, if possible
                 var propInfo = ReflectionCache.GetPropertyInfo(element.GetType(), reader.LocalName);
 
                 if (propInfo != null)
@@ -148,8 +163,9 @@ namespace SwishSvg.IO
                 }
                 else
                 {
-                    // TODO - add to the "property bag"?
                     Trace.TraceWarning("Unhandled {0} attribute: {1}", element.ElementName, reader.LocalName);
+
+                    element.ExtraAttributes.Add(reader.LocalName, reader.Value);
                 }
             }
         }

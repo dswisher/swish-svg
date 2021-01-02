@@ -61,6 +61,28 @@ namespace SwishSvg
 
 
         /// <summary>
+        /// Load an SVG element from the specified string.
+        /// </summary>
+        /// <param name="content">The string from which to load the SVG element.</param>
+        /// <typeparam name="T">The type of element that is expected.</typeparam>
+        /// <returns>An SVG element of the desired type.</returns>
+        public static T FromString<T>(string content)
+            where T : SvgElement
+        {
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new StreamWriter(memoryStream))
+            {
+                writer.Write(content);
+                writer.Flush();
+
+                memoryStream.Position = 0;
+
+                return (T)Load(memoryStream);
+            }
+        }
+
+
+        /// <summary>
         /// Read an SVG element from the specified stream.
         /// </summary>
         /// <param name="stream">The stream from which to read the element.</param>

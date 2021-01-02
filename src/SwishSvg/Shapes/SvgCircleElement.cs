@@ -3,13 +3,13 @@
 
 using SwishSvg.IO;
 
-namespace SwishSvg
+namespace SwishSvg.Shapes
 {
     /// <summary>
-    /// An SVG ellipse element.
+    /// An SVG circle element.
     /// </summary>
-    [SvgElement("ellipse")]
-    public class SvgEllipseElement : SvgElement
+    [SvgElement("circle")]
+    public class SvgCircleElement : SvgElement
     {
         /// <summary>
         /// Gets or sets the X position of the element center.

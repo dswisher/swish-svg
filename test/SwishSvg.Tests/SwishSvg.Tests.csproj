@@ -23,4 +23,9 @@
     <ItemGroup>
         <ProjectReference Include="../../src/SwishSvg/SwishSvg.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Samples/svg-spec/rect01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/rect02.svg" />
+    </ItemGroup>
 </Project>

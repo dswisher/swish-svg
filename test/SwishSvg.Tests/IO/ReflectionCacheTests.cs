@@ -1,8 +1,10 @@
 
 using System;
+using System.Linq;
 
 using FluentAssertions;
 using SwishSvg.IO;
+using SwishSvg.Shapes;
 using Xunit;
 
 namespace SwishSvg.Tests.IO
@@ -41,6 +43,21 @@ namespace SwishSvg.Tests.IO
 
             // Assert
             info.Should().NotBeNull();
+        }
+
+
+        [Theory]
+        [InlineData(typeof(SvgRectElement), "id", "x", "y")]
+        [InlineData(typeof(SvgCircleElement), "id", "cx", "cy")]
+        public void CanGetPropertiesForElement(Type elementType, params string[] attributeNames)
+        {
+            // Act
+            var pairs = ReflectionCache.GetPropertyInfos(elementType);
+
+            // Assert
+            var actualNames = pairs.Select(x => x.Key);
+
+            actualNames.Should().Contain(attributeNames);
         }
     }
 }

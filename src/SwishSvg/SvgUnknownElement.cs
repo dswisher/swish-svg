@@ -8,5 +8,14 @@ namespace SwishSvg
     /// </summary>
     public class SvgUnknownElement : SvgElement
     {
+        /// <summary>
+        /// Set the element name.
+        /// </summary>
+        /// <param name="name">The new element name.</param>
+        // TODO - this is hacky, and should be removed? Need a namespace, at least?
+        internal void SetElementName(string name)
+        {
+            ElementName = name;
+        }
     }
 }

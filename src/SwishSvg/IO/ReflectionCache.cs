@@ -23,8 +23,8 @@ namespace SwishSvg.IO
                 .Where(x => x.GetCustomAttribute<SvgElementAttribute>() != null)
                 .ToDictionary(k => k.GetCustomAttribute<SvgElementAttribute>().ElementName, v => v);
 
-            // Build the property map by finding all the properties with the SvgProperty attribute.
-            // Assume that every element has at least one property...
+            // Build the property map by finding all the properties with the SvgAttribute attribute.
+            // Assume that every element has at least one property, so create a dictionary entry for each...
             PropertyMap = ElementMap
                 .ToDictionary(k => k.Value, v => new Dictionary<string, PropertyInfo>());
 
@@ -95,6 +95,22 @@ namespace SwishSvg.IO
             }
 
             return null;
+        }
+
+
+        /// <summary>
+        /// For a given element type, return all attributes (properties).
+        /// </summary>
+        /// <param name="elementType">The element type whose property is sought.</param>
+        /// <returns>An enumerable of string/propertyInfo pairs, or null if the element is unknown.</returns>
+        public static IEnumerable<KeyValuePair<string, PropertyInfo>> GetPropertyInfos(Type elementType)
+        {
+            if (!PropertyMap.ContainsKey(elementType))
+            {
+                return null;
+            }
+
+            return PropertyMap[elementType];
         }
     }
 }

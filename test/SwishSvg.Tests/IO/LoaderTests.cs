@@ -1,7 +1,10 @@
 
 using System;
+using System.IO;
+using System.Reflection;
 
 using FluentAssertions;
+using SwishSvg.Shapes;
 using Xunit;
 
 namespace SwishSvg.Tests.IO
@@ -54,12 +57,77 @@ namespace SwishSvg.Tests.IO
                 .AddAttribute("y", yVal);
 
             // Act
-            // TODO - add a FromString overload that is type-safe, so we don't have to cast
-            var rect = (SvgRectElement)Svg.FromString(xml.ToString());
+            var rect = Svg.FromString<SvgRectElement>(xml.ToString());
 
             // Assert
             rect.X.Should().Be(xVal);
             rect.Y.Should().Be(yVal);
+        }
+
+
+        [Theory]
+        [InlineData("svg-spec/rect01.svg")]
+        // [InlineData("svg-spec/rect02.svg")]
+        public void CanLoadSample(string samplePath)
+        {
+            // Arrange
+            string content;
+            var assembly = Assembly.GetExecutingAssembly();
+            var cleaned = samplePath.Replace("-", "_").Replace("/", ".");
+            var path = "SwishSvg.Tests.Samples." + cleaned;
+            using (var stream = assembly.GetManifestResourceStream(path))
+            {
+                stream.Should().NotBeNull($"{path} should exist");
+
+                using (var reader = new StreamReader(stream))
+                {
+                    content = reader.ReadToEnd();
+                }
+            }
+
+            // Act
+            var svg = Svg.FromString<SvgSvgElement>(content);
+
+            // Assert
+            VerifyNoUnknownElements(svg, "svg");
+            VerifyNoExtraAttributes(svg, "svg");
+        }
+
+
+        private void VerifyNoUnknownElements(SvgElement element, string path)
+        {
+            element.Should().NotBeOfType<SvgUnknownElement>($"{path} should be parsed");
+
+            foreach (var child in element.Children)
+            {
+                VerifyNoUnknownElements(child, $"{path}.{child.ElementName}");
+            }
+        }
+
+
+        private void VerifyNoExtraAttributes(SvgElement element, string path)
+        {
+            foreach (var extra in element.ExtraAttributes)
+            {
+                string extraAtt;
+                if (element.Id == null)
+                {
+                    extraAtt = $"{path}@{extra.Key}";
+                }
+                else
+                {
+                    extraAtt = $"{path}(id={element.Id})@{extra.Key}";
+                }
+
+                extraAtt += $" = \"{extra.Value}\"";
+
+                extraAtt.Should().BeEmpty();
+            }
+
+            foreach (var child in element.Children)
+            {
+                VerifyNoExtraAttributes(child, $"{path}.{child.ElementName}");
+            }
         }
     }
 }

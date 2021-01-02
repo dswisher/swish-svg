@@ -27,6 +27,7 @@ namespace SwishSvg
             }
 
             Children = new List<SvgElement>();
+            ExtraAttributes = new Dictionary<string, string>();
         }
 
 
@@ -44,9 +45,17 @@ namespace SwishSvg
 
 
         /// <summary>
-        /// Gets the name of this element.
+        /// Gets or sets the name of this element.
         /// </summary>
-        public string ElementName { get; private set; }
+        // NOTE: this is protected, only for the SvgUnknownElement hack
+        public string ElementName { get; protected set; }
+
+
+        /// <summary>
+        /// Gets the dictionary of attributes that do not have a corresponding property (SvgAttribute).
+        /// </summary>
+        // TODO - need a namespace on these!
+        public Dictionary<string, string> ExtraAttributes { get; private set; }
 
 
         /// <summary>
@@ -89,7 +98,31 @@ namespace SwishSvg
 
         private void WriteAttributes(XmlWriter writer)
         {
-            // TODO - write attributes
+            // Write out the extra attributes
+            foreach (var extra in ExtraAttributes)
+            {
+                writer.WriteAttributeString(extra.Key, extra.Value);
+            }
+
+            // Write out the non-extra attributes
+            var props = ReflectionCache.GetPropertyInfos(this.GetType());
+
+            if (props == null)
+            {
+                return;
+            }
+
+            foreach (var pair in props)
+            {
+                // TODO - if the attribute is empty/null/default, do not write it
+                var name = pair.Key;
+                var val = pair.Value.GetValue(this);
+
+                if (val != null)
+                {
+                    writer.WriteAttributeString(name, val.ToString());
+                }
+            }
         }
 
 
