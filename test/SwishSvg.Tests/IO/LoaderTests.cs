@@ -5,6 +5,7 @@ using System.Reflection;
 
 using FluentAssertions;
 using SwishSvg.Shapes;
+using SwishSvg.Structure;
 using Xunit;
 
 namespace SwishSvg.Tests.IO
@@ -12,6 +13,7 @@ namespace SwishSvg.Tests.IO
     public class LoaderTests
     {
         [Theory]
+        [InlineData("circle", typeof(SvgCircleElement))]
         [InlineData("desc", typeof(SvgDescElement))]
         [InlineData("svg", typeof(SvgSvgElement))]
         [InlineData("rect", typeof(SvgRectElement))]
@@ -37,10 +39,26 @@ namespace SwishSvg.Tests.IO
             var desc = $"<desc>{content}</desc>";
 
             // Act
-            var elem = Svg.FromString(desc);
+            var elem = Svg.FromString<SvgDescElement>(desc);
 
             // Assert
             elem.Should().BeOfType<SvgDescElement>();
+            elem.Content.Should().Be(content);
+        }
+
+
+        [Fact]
+        public void CanLoadTitleContent()
+        {
+            // Arrange
+            var content = "Some random text that is not lorem ipsum.";
+            var desc = $"<title>{content}</title>";
+
+            // Act
+            var elem = Svg.FromString<SvgTitleElement>(desc);
+
+            // Assert
+            elem.Should().BeOfType<SvgTitleElement>();
             elem.Content.Should().Be(content);
         }
 
@@ -66,8 +84,22 @@ namespace SwishSvg.Tests.IO
 
 
         [Theory]
+        [InlineData("svg-spec/circle01.svg")]
+        [InlineData("svg-spec/ellipse01.svg")]
+        [InlineData("svg-spec/grouping01.svg")]
+        [InlineData("svg-spec/line01.svg")]
+        [InlineData("svg-spec/polygon01.svg")]
+        [InlineData("svg-spec/polyline01.svg")]
+        [InlineData("svg-spec/quad01.svg")]
         [InlineData("svg-spec/rect01.svg")]
-        // [InlineData("svg-spec/rect02.svg")]
+        [InlineData("svg-spec/rect02.svg")]
+        [InlineData("svg-spec/text01.svg")]
+        [InlineData("svg-spec/triangle01.svg")]
+        [InlineData("svg-spec/tspan01.svg")]
+        [InlineData("svg-spec/tspan02.svg")]
+        [InlineData("svg-spec/tspan03.svg")]
+        [InlineData("svg-spec/tspan04.svg")]
+        [InlineData("svg-spec/tspan05.svg")]
         public void CanLoadSample(string samplePath)
         {
             // Arrange

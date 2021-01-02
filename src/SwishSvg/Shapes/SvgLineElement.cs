@@ -7,37 +7,37 @@ using SwishSvg.IO;
 namespace SwishSvg.Shapes
 {
     /// <summary>
-    /// An SVG ellipse element.
+    /// An SVG line element.
     /// </summary>
-    [SvgElement("ellipse")]
-    public class SvgEllipseElement : SvgPresentationElement
+    [SvgElement("line")]
+    public class SvgLineElement : SvgPresentationElement
     {
         /// <summary>
-        /// Gets or sets the x-axis coordinate of the center of the ellipse.
+        /// Gets or sets the x-axis coordinate of the start of the line.
         /// </summary>
         // TODO - make this an SvgUnit or some such, and not a string
-        [SvgAttribute("cx")]
-        public string CX { get; set; }
+        [SvgAttribute("x1")]
+        public string X1 { get; set; }
 
         /// <summary>
-        /// Gets or sets the y-axis coordinate of the center of the ellipse.
+        /// Gets or sets the y-axis coordinate of the start of the line.
         /// </summary>
         // TODO - make this an SvgUnit or some such, and not a string
-        [SvgAttribute("cy")]
-        public string CY { get; set; }
+        [SvgAttribute("y1")]
+        public string Y1 { get; set; }
 
         /// <summary>
-        /// Gets or sets the x-axis radius of the ellipse.
+        /// Gets or sets the x-axis coordinate of the end of the line.
         /// </summary>
         // TODO - make this an SvgUnit or some such, and not a string
-        [SvgAttribute("rx")]
-        public string RX { get; set; }
+        [SvgAttribute("x2")]
+        public string X2 { get; set; }
 
         /// <summary>
-        /// Gets or sets the y-axis radius of the ellipse.
+        /// Gets or sets the y-axis coordinate of the end of the line.
         /// </summary>
         // TODO - make this an SvgUnit or some such, and not a string
-        [SvgAttribute("ry")]
-        public string RY { get; set; }
+        [SvgAttribute("y2")]
+        public string Y2 { get; set; }
     }
 }

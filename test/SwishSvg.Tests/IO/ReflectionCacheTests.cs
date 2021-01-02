@@ -5,6 +5,7 @@ using System.Linq;
 using FluentAssertions;
 using SwishSvg.IO;
 using SwishSvg.Shapes;
+using SwishSvg.Structure;
 using Xunit;
 
 namespace SwishSvg.Tests.IO

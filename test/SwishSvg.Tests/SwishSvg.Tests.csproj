@@ -25,7 +25,21 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Samples/svg-spec/circle01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/ellipse01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/grouping01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/line01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/polygon01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/polyline01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/quad01.svg" />
         <EmbeddedResource Include="Samples/svg-spec/rect01.svg" />
         <EmbeddedResource Include="Samples/svg-spec/rect02.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/text01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/triangle01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/tspan01.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/tspan02.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/tspan03.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/tspan04.svg" />
+        <EmbeddedResource Include="Samples/svg-spec/tspan05.svg" />
     </ItemGroup>
 </Project>

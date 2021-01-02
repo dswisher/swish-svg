@@ -1,6 +1,7 @@
 // Copyright (c) Doug Swisher. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE.md in the project root for license information.
 
+using SwishSvg.BaseTypes;
 using SwishSvg.IO;
 
 namespace SwishSvg.Shapes
@@ -9,7 +10,7 @@ namespace SwishSvg.Shapes
     /// An SVG rectangle element.
     /// </summary>
     [SvgElement("rect")]
-    public class SvgRectElement : SvgElement
+    public class SvgRectElement : SvgPresentationElement
     {
         /// <summary>
         /// Gets or sets the X position of the element.
@@ -52,26 +53,5 @@ namespace SwishSvg.Shapes
         // TODO - make this an SvgUnit or some such, and not a string
         [SvgAttribute("ry")]
         public string RY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fill of the element.
-        /// </summary>
-        // TODO - make this something other than a string
-        [SvgAttribute("fill")]
-        public string Fill { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke of the element.
-        /// </summary>
-        // TODO - make this something other than a string
-        [SvgAttribute("stroke")]
-        public string Stroke { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke width of the element.
-        /// </summary>
-        // TODO - make this something other than a string
-        [SvgAttribute("stroke-width")]
-        public string StrokeWidth { get; set; }
     }
 }
