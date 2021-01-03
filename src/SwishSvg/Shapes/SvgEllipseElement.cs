@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE.md in the project root for license information.
 
 using SwishSvg.BaseTypes;
+using SwishSvg.DataTypes;
 using SwishSvg.IO;
 
 namespace SwishSvg.Shapes
@@ -15,29 +16,25 @@ namespace SwishSvg.Shapes
         /// <summary>
         /// Gets or sets the x-axis coordinate of the center of the ellipse.
         /// </summary>
-        // TODO - make this an SvgUnit or some such, and not a string
         [SvgAttribute("cx")]
-        public string CX { get; set; }
+        public SvgLength CX { get; set; }
 
         /// <summary>
         /// Gets or sets the y-axis coordinate of the center of the ellipse.
         /// </summary>
-        // TODO - make this an SvgUnit or some such, and not a string
         [SvgAttribute("cy")]
-        public string CY { get; set; }
+        public SvgLength CY { get; set; }
 
         /// <summary>
         /// Gets or sets the x-axis radius of the ellipse.
         /// </summary>
-        // TODO - make this an SvgUnit or some such, and not a string
         [SvgAttribute("rx")]
-        public string RX { get; set; }
+        public SvgLength RX { get; set; }
 
         /// <summary>
         /// Gets or sets the y-axis radius of the ellipse.
         /// </summary>
-        // TODO - make this an SvgUnit or some such, and not a string
         [SvgAttribute("ry")]
-        public string RY { get; set; }
+        public SvgLength RY { get; set; }
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml;
 
@@ -75,8 +76,9 @@ namespace SwishSvg.IO
                 }
                 catch (Exception ex)
                 {
-                    // TODO - should this throw?
-                    Trace.TraceError(ex.Message);
+                    // TODO - throw a custom exception
+                    // TODO - get more info about where the error occurred (line number, element, etc)
+                    throw new Exception("Error loading", ex);
                 }
             }
         }
@@ -158,8 +160,9 @@ namespace SwishSvg.IO
 
                 if (propInfo != null)
                 {
-                    // TODO - do conversions!
-                    propInfo.SetValue(element, reader.Value);
+                    var converter = TypeDescriptor.GetConverter(propInfo.PropertyType);
+
+                    propInfo.SetValue(element, converter.ConvertFrom(reader.Value));
                 }
                 else
                 {
