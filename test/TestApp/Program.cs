@@ -2,7 +2,9 @@
 using System;
 using System.Diagnostics;
 
-using SwishSvg;
+using CommandLine;
+using TestApp.Commands;
+using TestApp.Options;
 
 namespace TestApp
 {
@@ -14,18 +16,11 @@ namespace TestApp
             {
                 Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
 
-                if (args.Length != 1)
-                {
-                    Console.WriteLine("You must specify the name of an SVG file to load.");
-                    return 1;
-                }
+                var parsedArgs = Parser.Default.ParseArguments<CreateOptions, LoadSaveOptions>(args);
 
-                var path = args[0];
-                var svg = Svg.Load(path);
-
-                Svg.Save(svg, Console.Out);
-
-                Console.WriteLine();
+                parsedArgs
+                    .WithParsed<CreateOptions>(opts => new CreateCommand(opts).Execute())
+                    .WithParsed<LoadSaveOptions>(opts => new LoadSaveCommand(opts).Execute());
 
                 return 0;
             }
@@ -34,7 +29,7 @@ namespace TestApp
                 Console.WriteLine("Unhandled exception:");
                 Console.WriteLine(ex);
 
-                return 2;
+                return 1;
             }
         }
     }
